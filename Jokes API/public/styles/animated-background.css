@@ -1,0 +1,23 @@
+body {
+    font-family: 'Gloria Hallelujah', cursive;
+    text-align: center;
+    padding: 20px;
+    overflow: hidden; /* Hide overflow to prevent scrolling */
+    animation: gradient 15s linear infinite; /* Use the gradient animation */
+  }
+  
+  @keyframes gradient {
+    0% {
+      background: linear-gradient(45deg, #f06, #9f6);
+      background-size: 400% 400%; /* Increase background size for animation */
+    }
+    50% {
+      background: linear-gradient(45deg, #6f9, #f06);
+      background-size: 400% 400%;
+    }
+    100% {
+      background: linear-gradient(45deg, #f06, #9f6);
+      background-size: 400% 400%;
+    }
+  }
+  
