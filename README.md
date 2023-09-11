@@ -1,2 +1,2 @@
 # WebDevelopment
-HTML, CSS, Javascript, Node, React, MongoDB, Web3 and DApps
+HTML, CSS, Javascript, Node, React, MongoDB, Express & EJS
