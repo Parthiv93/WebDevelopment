@@ -1,0 +1,30 @@
+<!-- index.ejs -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Abel&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <h1><%= getDayAndDate() %></h1>
+        </header>
+
+        <section class="task-section">
+            <h2>Daily Tasks</h2>
+            <a href="/daily">Go to Daily Tasks</a>
+        </section>
+
+        <section class="task-section">
+            <h2>Work Tasks</h2>
+            <a href="/work">Go to Work Tasks</a>
+        </section>
+    </div>
+
+    <footer>
+        <p>Copyright &copy; <%= currentYear %> ToDo Lists</p>
+    </footer>
+</body>
+</html>

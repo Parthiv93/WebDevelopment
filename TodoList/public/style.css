@@ -1,0 +1,122 @@
+.back{
+    margin-top: auto;
+    text-align: center;
+    font-size: larger;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+footer {
+    margin-top: auto;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+
+body {
+    font-family: 'Abel', sans-serif;
+}
+
+
+body {
+    background: linear-gradient(45deg, #ffcc00, #ff6f61, #ffaaff, #87ffbb);
+    background-size: 400% 400%;
+    animation: gradientAnimation 10s linear infinite alternate;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 0%;
+    }
+    100% {
+        background-position: 100% 100%;
+    }
+}
+
+
+.wrapper {
+    flex-grow: 1;
+}
+
+
+header {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+header h1 {
+    font-size: 36px;
+}
+
+
+form {
+    text-align: center;
+    padding: 20px;
+}
+
+form input[type="text"] {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+form button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #ff6f61;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #ff4741;
+}
+
+
+ul {
+    list-style-type: none;
+    padding: 20px;
+    color: #333;
+}
+
+li {
+    margin: 5px 0;
+    font-size: 18px;
+    color: #333;
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.task-section{
+    font-size: larger;
+    text-align: center;
+}

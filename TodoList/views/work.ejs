@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Abel&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1><%= getDayAndDate() %> - Work Tasks</h1>
+    </header>
+    
+    <form action="/addTask/work" method="POST">
+        <input type="text" name="newTaskWork" placeholder="New Work Task" autocomplete="off">
+        <button type="submit">Add</button>
+    </form>
+    
+    <ul id="workTasks">
+        <% for (let i = 0; i < workTasks.length; i++) { %>
+            <li>
+                <input type="checkbox" id="workTask<%= i %>" name="workTask<%= i %>" <% if (workTasks[i].done) { %>checked<% } %>>
+                <label for="workTask<%= i %>"><%= workTasks[i].task %></label>
+            </li>
+        <% } %>
+    </ul>
+
+
+<a href="/" class="back">Go back to Index</a>
+
+    
+    <footer>
+        <p>Copyright &copy; <%= currentYear %> ToDo Lists</p>
+    </footer>
+</body>
+</html>
