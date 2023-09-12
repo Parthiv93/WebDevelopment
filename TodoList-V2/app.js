@@ -47,19 +47,23 @@ const item3 = new Item({
 
 const defaultItems = [item1, item2, item3];
 
-Item.insertMany(defaultItems)
-  .then(() => {
-    console.log("Default items added successfully.");
-  })
-  .catch((error) => {
-    console.error("Error adding default items:", error);
-  });
-
 
 app.get("/", async function (req, res) {
   try {
     const foundItems = await Item.find({}).exec();
-    res.render("list", { listTitle: "Today", newListItems: foundItems });
+    if (foundItems.length === 0) {
+        Item.insertMany(defaultItems)
+            .then(() => {
+              console.log("Default items added successfully.");
+            })
+            .catch((error) => {
+              console.error("Error adding default items:", error);
+            });
+            res.redirect("/");
+    }
+    else {
+      res.render("list", { listTitle: "Today", newListItems: foundItems });
+    }
   } catch (err) {
     console.error(err);
     res.status(500).send("Error retrieving items");
