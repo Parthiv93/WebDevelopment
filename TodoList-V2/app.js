@@ -9,7 +9,7 @@ app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
-
+app.use(express.json());
 
 mongoose.connect("mongodb://127.0.0.1:27017/todolistDB", {
   useNewUrlParser: true,
@@ -113,6 +113,24 @@ app.post("/work", async function (req, res) {
     res.status(500).send("Error adding work item");
   }
 });
+
+app.post("/delete", async function (req, res) {
+  const itemIdToDelete = req.body.itemId;
+  try {
+      const deleteResult = await Item.deleteOne({ _id: itemIdToDelete });
+    if (deleteResult.deletedCount === 1) {
+      console.log("Item deleted successfully.");
+      res.json({ success: true });
+    } else {
+      console.error("Item not found.");
+      res.status(404).json({ success: false, error: "Item not found" });
+    }
+  } catch (err) {
+    console.error("Error deleting item:", err);
+    res.status(500).json({ success: false, error: "Error deleting item" });
+  }
+});
+
 
 app.get("/about", function (req, res) {
   res.render("about");

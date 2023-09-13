@@ -5,13 +5,38 @@
   </div>
 
   <div class="box">
-
-    <%  newListItems.forEach(function(item) { %>
+    <% newListItems.forEach(function (item) { %>
       <div class="item">
-        <input type="checkbox">
-        <p><%=  item.name  %></p>
+        <input type="checkbox" name="itemCheckbox" value="<%= item._id %>" onchange="deleteItem('<%= item._id %>')">
+        <span><%= item.name %></span>
       </div>
     <% }); %>
+
+    <script>
+      function deleteItem(itemId) {
+        console.log("Deleting item with ID:", itemId);
+        fetch('/delete', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ itemId: itemId }),
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              location.reload();
+            } else {
+              console.error('Error deleting item:', data.error);
+              alert('Error deleting item. Please try again.');
+            }
+          })
+          .catch(error => {
+            console.error('Error deleting item:', error);
+            alert('Error deleting item. Please try again.');
+          });
+      }
+    </script>
 
       <form class="item" action="/" method="post">
         <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
