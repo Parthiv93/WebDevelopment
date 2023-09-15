@@ -94,39 +94,35 @@ app.get("/:customListName", async function (req, res) {
 
 app.post("/", async function (req, res) {
   const itemName = req.body.newItem;
-
+  const listName = req.body.list;
   const newItem = new Item({
     name: itemName
   });
-  try {
-    await newItem.save();
-    console.log("Item added successfully.");
-    res.redirect("/");
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error adding item");
-  }
-});
-
-app.post("/:customListName", async function (req, res) {
-  const customListName = req.params.customListName;
-  const itemName = req.body.newItem;
-
-  const newItem = new Item({
-    name: itemName
-  });
-
-  try {
-    const foundList = await List.findOne({ name: customListName }).exec();
-    if (foundList) {
-      foundList.items.push(newItem);
-      await foundList.save();
-      console.log("Item added to custom list successfully.");
-      res.redirect("/" + customListName);
+  if (listName === "Today") {
+    try {
+      await newItem.save();
+      console.log("Item added successfully.");
+      res.redirect("/");
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error adding item");
     }
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error adding item to custom list");
+  }
+  else {
+    try {
+      const foundList = await List.findOne({ name: listName }).exec();
+      if (foundList) {
+        foundList.items.push(newItem);
+        await foundList.save();
+        res.redirect("/" + listName);
+      } else {
+        console.error("List not found.");
+        res.status(404).send("List not found");
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error finding or updating list");
+    }
   }
 });
 
