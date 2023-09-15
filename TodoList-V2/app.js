@@ -27,12 +27,6 @@ const itemsSchema = {
 
 const Item = mongoose.model("Item", itemsSchema);
 
-const workItemsSchema = {
-  name: String
-};
-
-const WorkItem = mongoose.model("WorkItem", workItemsSchema);
-
 const item1 = new Item({
   name: "Welcome to your todolist!"
 });
@@ -46,6 +40,13 @@ const item3 = new Item({
 });
 
 const defaultItems = [item1, item2, item3];
+
+const listSchema = {
+  name: String,
+  items: [itemsSchema]
+};
+
+const List =mongoose.model("List", listSchema);
 
 
 app.get("/", async function (req, res) {
@@ -70,13 +71,33 @@ app.get("/", async function (req, res) {
   }
 });
 
+app.get("/:customListName", async function (req, res) {
+  const customListName = req.params.customListName;
+  try {
+    const foundList = await List.findOne({ name: customListName }).exec();
+    if (!foundList) {
+      const list = new List({
+        name: customListName,
+        items: defaultItems
+      });
+      await list.save();
+      res.redirect("/" + customListName);
+    } else {
+      res.render("list", { listTitle: foundList.name, newListItems: foundList.items });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error retrieving or creating list");
+  }
+});
+
+
 app.post("/", async function (req, res) {
   const itemName = req.body.newItem;
 
   const newItem = new Item({
     name: itemName
   });
-
   try {
     await newItem.save();
     console.log("Item added successfully.");
@@ -87,30 +108,25 @@ app.post("/", async function (req, res) {
   }
 });
 
-app.get("/work", async function (req, res) {
-  try {
-    const foundWorkItems = await WorkItem.find({}).exec();
-    res.render("list", { listTitle: "Work List", newListItems: foundWorkItems });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error retrieving work items");
-  }
-});
+app.post("/:customListName", async function (req, res) {
+  const customListName = req.params.customListName;
+  const itemName = req.body.newItem;
 
-app.post("/work", async function (req, res) {
-  const workItemName = req.body.newWorkItem;
-
-  const newWorkItem = new WorkItem({
-    name: workItemName
+  const newItem = new Item({
+    name: itemName
   });
 
   try {
-    await newWorkItem.save();
-    console.log("Work item added successfully.");
-    res.redirect("/work");
+    const foundList = await List.findOne({ name: customListName }).exec();
+    if (foundList) {
+      foundList.items.push(newItem);
+      await foundList.save();
+      console.log("Item added to custom list successfully.");
+      res.redirect("/" + customListName);
+    }
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error adding work item");
+    res.status(500).send("Error adding item to custom list");
   }
 });
 
