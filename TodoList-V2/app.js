@@ -128,18 +128,37 @@ app.post("/", async function (req, res) {
 
 app.post("/delete", async function (req, res) {
   const itemIdToDelete = req.body.itemId;
-  try {
+  const listName = req.body.listName;
+  console.log("listName:", listName);
+  if (listName === "Today") {
+    try {
       const deleteResult = await Item.deleteOne({ _id: itemIdToDelete });
-    if (deleteResult.deletedCount === 1) {
-      console.log("Item deleted successfully.");
-      res.json({ success: true });
-    } else {
-      console.error("Item not found.");
-      res.status(404).json({ success: false, error: "Item not found" });
+      if (deleteResult.deletedCount === 1) {
+        console.log("Item deleted successfully.");
+        res.redirect("/");
+      } else {
+        console.error("Item not found.");
+        res.status(404).send("Item not found");
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error deleting item");
     }
-  } catch (err) {
-    console.error("Error deleting item:", err);
-    res.status(500).json({ success: false, error: "Error deleting item" });
+  }
+  else{
+    try {
+      const foundList = await List.findOneAndUpdate({ name: listName }, { $pull: { items: { _id: itemIdToDelete } } }, { useFindAndModify: false }).exec();
+      if (foundList) {
+        console.log("Item deleted successfully.");
+        res.redirect("/" + listName);
+      } else {
+        console.error("List not found.");
+        res.status(404).send("List not found");
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error deleting item");
+    }
   }
 });
 
