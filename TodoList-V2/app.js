@@ -126,44 +126,36 @@ app.post("/", async function (req, res) {
   }
 });
 
-app.post("/delete", async function (req, res) {
-  const checkedItemId = req.body.checkbox;
+app.post("/delete/:listName", async function (req, res) {
+  const listName = req.params.listName;
   const itemIdToDelete = req.body.itemId;
-  const listName = req.body.listName;
-  console.log("listName:", listName);
-  console.log("checkedItemId:", checkedItemId);
-  if (listName === "Today") {
-    try {
-      const deleteResult = await Item.deleteOne({ _id: itemIdToDelete });
-      if (deleteResult.deletedCount === 1) {
-        console.log("Item deleted successfully.");
-        res.redirect("/");
+  try {
+    if (listName === "Today") {
+      const deletedItem = await Item.findOneAndDelete({ _id: itemIdToDelete });
+      if (deletedItem) {
+        console.log("Item deleted successfully from default list.");
+        res.json({ success: true });
       } else {
-        console.error("Item not found.");
-        res.status(404).send("Item not found");
+        console.error("Item not found in default list.");
+        res.status(404).json({ success: false, error: "Item not found in default list" });
       }
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Error deleting item");
-    }
-  }
-  else{
-    try {
-      const foundList = await List.findOneAndUpdate({ name: listName }, { $pull: { items: { _id: checkedItemId } } }, { useFindAndModify: false }).exec();
-      if (foundList) {
-        console.log("Item deleted successfully.");
-        res.redirect("/" + listName);
+    } else {
+      const list = await List.findOne({ name: listName });
+      if (list) {
+        list.items.pull(itemIdToDelete);
+        await list.save();
+        console.log("Item deleted successfully from custom list.");
+        res.json({ success: true });
       } else {
-        console.error("List not found.");
-        res.status(404).send("List not found");
+        console.error("Custom list not found.");
+        res.status(404).json({ success: false, error: "Custom list not found" });
       }
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Error deleting item");
     }
+  } catch (err) {
+    console.error("Error deleting item:", err);
+    res.status(500).json({ success: false, error: "Error deleting item" });
   }
 });
-
 
 app.get("/about", function (req, res) {
   res.render("about");

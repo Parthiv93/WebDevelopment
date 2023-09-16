@@ -12,17 +12,15 @@
     </div>
   <% }); %>
 
-  <input type="hidden" name="listName" value="<%= listTitle %>">  
-
   <script>
     function deleteItem(itemId) {
       console.log("Deleting item with ID:", itemId);
-      fetch('/delete', {
+      fetch('/delete/<%= listTitle %>', { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ itemId: itemId, listName: '<%= listTitle %>'}),
+        body: JSON.stringify({ itemId: itemId }),
       })
         .then(response => response.json())
         .then(data => {
