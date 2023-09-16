@@ -127,9 +127,11 @@ app.post("/", async function (req, res) {
 });
 
 app.post("/delete", async function (req, res) {
+  const checkedItemId = req.body.checkbox;
   const itemIdToDelete = req.body.itemId;
   const listName = req.body.listName;
   console.log("listName:", listName);
+  console.log("checkedItemId:", checkedItemId);
   if (listName === "Today") {
     try {
       const deleteResult = await Item.deleteOne({ _id: itemIdToDelete });
@@ -147,7 +149,7 @@ app.post("/delete", async function (req, res) {
   }
   else{
     try {
-      const foundList = await List.findOneAndUpdate({ name: listName }, { $pull: { items: { _id: itemIdToDelete } } }, { useFindAndModify: false }).exec();
+      const foundList = await List.findOneAndUpdate({ name: listName }, { $pull: { items: { _id: checkedItemId } } }, { useFindAndModify: false }).exec();
       if (foundList) {
         console.log("Item deleted successfully.");
         res.redirect("/" + listName);
